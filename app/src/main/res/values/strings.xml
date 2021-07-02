@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">SdosApp</string>
+    <string name="app_name">SDOS APP</string>
+    <string name="app_username">USERNAME</string>
+    <string name="app_password">PASSWORD</string>
+    <string name="app_inicio">Iniciar Sesión</string>
+    <string name="filter_code">Ordenar por código</string>
+    <string name="filter_name">Ordenar por nombre</string>
+    <string name="filter_visit">Ordenar por visitado</string>
 </resources>

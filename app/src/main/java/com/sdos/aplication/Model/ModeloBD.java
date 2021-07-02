@@ -6,33 +6,33 @@ import java.util.List;
 public class ModeloBD {
 
 
-    private String[] listaCodigo(){
+    public static String[] listaCodigo(){
         return new String[] {
-                "10","12","13","14","15","16","17","18",
+                "CODIGO","10","12","13","14","15","16","17","18",
         };
     }
 
-    private String[] listaNombre(){
+    public static String[] listaNombre(){
         return new String[] {
-               "Laura","Fernando","Pablo","Poseidon","Irina","Helena","Atenea","Artemisa"
+               "NOMBRE","Laura","Fernando","Pablo","Poseidon","Irina","Helena","Atenea","Artemisa"
         };
     }
 
-    private String[] listaTelefono(){
+    public static String[] listaTelefono(){
         return new String[] {
-                "652525252","659848785","689456320","653589574","659874123","658784521","652541236","689847411"
+                "TELEFONO","652525252","659848785","689456320","653589574","659874123","658784521","652541236","689847411"
         };
     }
 
-    private String[] listaEmail(){
+    public static String[] listaEmail(){
         return new String[] {
-                "example@gmail.com"
+                "EMAIL","example@gmail.com"
         };
     }
 
-    private String[] listaVisitado(){
+    public static String[] listaVisitado(){
         return new String[] {
-                "1","1","1","0","1","0","0","0"
+                "VISITADO","1","1","1","0","1","0","0","0"
         };
     }
 

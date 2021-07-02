@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/table_layout">
+
+    <Button
+        android:id="@+id/bt_filter_code"
+        android:text="@string/filter_code"
+        android:background="@drawable/boton"
+        />
+    <Button
+        android:id="@+id/bt_filter_name"
+        android:text="@string/filter_name"
+        android:background="@drawable/boton"
+        />
+    <Button
+        android:id="@+id/bt_filter_visit"
+        android:text="@string/filter_visit"
+        android:background="@drawable/boton"
+        />
+</TableLayout>
