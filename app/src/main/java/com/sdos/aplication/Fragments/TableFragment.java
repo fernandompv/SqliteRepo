@@ -3,7 +3,6 @@ package com.sdos.aplication.Fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,9 @@ import androidx.fragment.app.Fragment;
 import com.sdos.aplication.Model.DataClient;
 import com.sdos.aplication.Model.ModeloBD;
 import com.sdos.aplication.R;
-import com.sdos.aplication.Sort.SortByCode;
-import com.sdos.aplication.Sort.SortByName;
-import com.sdos.aplication.Sort.SortByVisit;
+import com.sdos.aplication.SortList.SortByName;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,16 +57,28 @@ public class TableFragment extends Fragment {
     private void initializeListenersButtons(){
         mBtFilterCode.setOnClickListener(view -> {
             mTable.removeAllViews();
+            //Despues de remover todas las views de la tabla debemos rellenarla con los botones de nuevo para que no los pierda
+            mTable.addView(mBtFilterCode);
+            mTable.addView(mBtFilterName);
+            mTable.addView(mBtFilterVisit);
             fillRows(true,"C");
         });
 
         mBtFilterName.setOnClickListener(view -> {
             mTable.removeAllViews();
+            //Despues de remover todas las views de la tabla debemos rellenarla con los botones de nuevo para que no los pierda
+            mTable.addView(mBtFilterCode);
+            mTable.addView(mBtFilterName);
+            mTable.addView(mBtFilterVisit);
             fillRows(true,"N");
         });
 
         mBtFilterVisit.setOnClickListener(view -> {
             mTable.removeAllViews();
+            //Despues de remover todas las views de la tabla debemos rellenarla con los botones de nuevo para que no los pierda
+            mTable.addView(mBtFilterCode);
+            mTable.addView(mBtFilterName);
+            mTable.addView(mBtFilterVisit);
             fillRows(true,"V");
         });
     }
@@ -78,51 +86,41 @@ public class TableFragment extends Fragment {
     private void fillRows(boolean inOrder,String tag){
         TableRow.LayoutParams lp = new TableRow.LayoutParams();
         lp.setMargins(10, 10, 10, 10);
+        List<DataClient> clientList = new ArrayList<>();
+        //Identificamos que venimos de uno de los botones que ordenan la lista
+        for (int i = 1; i < ModeloBD.listaNombre().length; i++) {
+            //ordenar la lista según el tag
+            //variable especial para el email porque solo tenemos 1 dato.
+            int posEmail = i == 1 ? 0 : 1;
+            DataClient data = new DataClient(ModeloBD.listaCodigo()[i-1],ModeloBD.listaNombre()[i-1]
+                    ,ModeloBD.listaTelefono()[i-1],ModeloBD.listaEmail()[posEmail],ModeloBD.listaVisitado()[i-1]);
+            clientList.add(data);
+        }
         if(inOrder){
-            //identificamos que venimos de uno de los botones que ordenan la lista
-            List<DataClient> clientList = new ArrayList<>();
-            for (int i = 1; i < ModeloBD.listaNombre().length; i++) {
-                //ordenar la lista según el tag
-                DataClient data = new DataClient(ModeloBD.listaCodigo()[i-1],ModeloBD.listaNombre()[i-1]
-                        ,ModeloBD.listaTelefono()[i-1],ModeloBD.listaEmail()[0],ModeloBD.listaVisitado()[i-1]);
-                clientList.add(data);
-            }
 
             switch (tag){
                 case "C":
                     orderByCode(clientList);
                     break;
                 case "N":
-                    //orderByName(clientList);
+                    orderByName(clientList);
                     break;
                 case "V":
                     orderByVisit(clientList);
                     break;
             }
 
-            //En este punto la lista ya deberia venir ordenada y por tanto podemos rellena la tabla de nuevo
-            fillListWithOrder(lp,clientList);
-
-        }else {
-            //no nos importa el orden
-            for (int i = 1; i < ModeloBD.listaNombre().length; i++) {
-                TableRow row = new TableRow(getActivity());
-                row.setLayoutParams(lp);
-                fillCode(ModeloBD.listaCodigo()[i-1],row, lp);
-                fillName(ModeloBD.listaNombre()[i-1],row, lp);
-                fillPhone(ModeloBD.listaTelefono()[i-1],row, lp);
-                fillEmail(ModeloBD.listaEmail()[0],row, lp);
-                fillVisit(ModeloBD.listaVisitado()[i-1],row, lp);
-                mTable.addView(row);
-            }
         }
+
+        //En este punto la lista ya deberia venir ordenada y por tanto podemos rellena la tabla de nuevo
+        fillListWithOrWithoutOrder(lp,clientList);
     }
 
-    private void fillListWithOrder(TableRow.LayoutParams lp,List<DataClient> clientList){
-        //rellenamos la tabla ya ordenada desde la lista de objetos
-        TableRow row = new TableRow(getActivity());
-        row.setLayoutParams(lp);
+    private void fillListWithOrWithoutOrder(TableRow.LayoutParams lp,List<DataClient> clientList){
         for(DataClient data : clientList){
+            TableRow row = new TableRow(getActivity());
+            //rellenamos la tabla ya ordenada desde la lista de objetos
+            row.setLayoutParams(lp);
             fillCode(data.getCode(),row, lp);
             fillName(data.getName(),row, lp);
             fillPhone(data.getPhone(),row, lp);
@@ -154,7 +152,7 @@ public class TableFragment extends Fragment {
         if(!text.equals("TELEFONO"))
             tv.setTextColor(getActivity().getColor(R.color.blue));
         tv.setOnClickListener(view -> {
-            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            Intent callIntent = new Intent(Intent.ACTION_DIAL);
             callIntent.setData(Uri.parse("tel:"+tv.getText().toString()));
             startActivity(callIntent);
         });
@@ -177,7 +175,7 @@ public class TableFragment extends Fragment {
 
     private void orderByCode(List<DataClient> clientList){
         //Ordenamos por codigo los valores de la lista pasada por parametros
-        Collections.sort(clientList,new SortByCode());
+        Collections.sort(clientList,Collections.reverseOrder());
     }
 
     private void orderByName(List<DataClient> clientList){
@@ -185,7 +183,15 @@ public class TableFragment extends Fragment {
     }
     private void orderByVisit(List<DataClient> clientList){
         //Ordenamos por visitado los valores de la lista pasada por parametros
-        Collections.sort(clientList,new SortByVisit());
+        List<DataClient> aux = new ArrayList<>();
+        for (DataClient data : clientList){
+            if(data.getVisit().equals("1")) {
+                aux.add(data);
+            }
+        }
+        //removemos y luego añadimos para que la posición sea por debajo
+        clientList.removeAll(aux);
+        clientList.addAll(aux);
     }
 
 }

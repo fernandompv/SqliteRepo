@@ -1,6 +1,8 @@
 package com.sdos.aplication.Model;
 
-public class DataClient {
+import android.provider.ContactsContract;
+
+public class DataClient implements Comparable<DataClient>{
 
     private String mCode;
     private String mName;
@@ -55,5 +57,13 @@ public class DataClient {
 
     public void setVisit(String mVisit) {
         this.mVisit = mVisit;
+    }
+
+    @Override
+    public int compareTo(DataClient dataClient) {
+        if(dataClient.getCode().equals("CODIGO") || this.mCode.equals("CODIGO"))
+            return 0;
+        else
+            return Integer.compare(Integer.parseInt(this.mCode), Integer.parseInt(dataClient.getCode()));
     }
 }

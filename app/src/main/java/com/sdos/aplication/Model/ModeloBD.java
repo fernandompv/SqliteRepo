@@ -26,7 +26,7 @@ public class ModeloBD {
 
     public static String[] listaEmail(){
         return new String[] {
-                "EMAIL","example@gmail.com"
+                "EMAIL","@gmail.com"
         };
     }
 
